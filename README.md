@@ -6,8 +6,8 @@
 
 1. Устанавливает зависимости (`cmake`, `ninja`, `build-essential`, `libopenblas`, ...).
 2. Клонирует `ggml-org/llama.cpp`, делает checkout последнего тега вида `vX.Y.Z`.
-3. Накладывает PR №`<PR_NUMBER>` (по умолчанию `27537`) по цепочке методов:
-   `git apply` → `git apply --3way` → cherry-pick коммитов PR → резервное слияние.
+3. Накладывает PR №`<PR_NUMBER>` (по умолчанию `27537`) одним способом:
+   `git apply --3way` на `pull/N.diff` (строгая «трёхточечная» разница — только изменения PR; при дрейфе контекста — 3-way merge по блобам репозитория).
 4. Собирает цели `llama-cli`, `llama-server`, `llama-bench`, `llama-perplexity`, `llama-tokenize` для архитектур:
 
    | Архитектура | CUDA |
