@@ -15,9 +15,10 @@
    | `cpu` | — (OpenBLAS) |
    | `gpu_all` | 75;80;89 (одна универсальная сборка на T4 sm_75, A100 sm_80, L4 sm_89) |
 
-5. Собирает **два варианта** по `GGML_NATIVE`:
-   - `universal` (`-DGGML_NATIVE=OFF`) — переносимая сборка: CPU SSE4.2/AVX/AVX2/FMA/F16C/BMI2 (без AVX-512), CUDA во все арки. Работает на всех рантаймах Colab (в т.ч. EPYC без avx512f).
-   - `native` (`-DGGML_NATIVE=ON`) — оптимизация строго под машину сборки (в т.ч. CUDA-арка `native`).
+5. Собирает **три варианта** по `GGML_NATIVE` / типу линковки:
+   - `universal` (`-DGGML_NATIVE=OFF`) — переносимая сборка: CPU SSE4.2/AVX/AVX2/FMA/F16C/BMI2 (без AVX-512), CUDA во все арки. Работает на всех рантаймах Colab (в т.ч. EPYC без avx512f). Разделяемые `.so`.
+   - `native` (`-DGGML_NATIVE=ON`) — оптимизация строго под машину сборки (в т.ч. CUDA-арка `native`). Разделяемые `.so`.
+   - `native-static` (`-DGGML_NATIVE=ON -DBUILD_SHARED_LIBS=OFF`) — статически слинкованные исполняемые файлы (llama/ggml вкомпонованы в бинарники; системные glibc/OpenBLAS остаются динамическими). Официальный способ из `docs/build.md`: «For static builds, add `-DBUILD_SHARED_LIBS=OFF`».
 6. Запускает smoke-тесты (`ldd`, `--version`).
 7. Публикует на Drive: распакованные папки и архивы `tar.gz` на каждый вариант/архитектуру + общий манифест.
 
@@ -44,6 +45,11 @@
 │   └── gpu_all.tar.gz
 ├── native/                   # GGML_NATIVE=ON (под машину сборки)
 │   ├── cpu/
+│   ├── cpu.tar.gz
+│   ├── gpu_all/
+│   └── gpu_all.tar.gz
+├── native-static/            # GGML_NATIVE=ON + BUILD_SHARED_LIBS=OFF (статические исполняемые)
+│   ├── cpu/                  # только бинарники (без .so)
 │   ├── cpu.tar.gz
 │   ├── gpu_all/
 │   └── gpu_all.tar.gz
